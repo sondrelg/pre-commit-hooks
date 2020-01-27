@@ -35,10 +35,13 @@ def get_line_offsets_by_line_no(src):  # type: (str) -> List[int]
         offsets.append(offsets[-1] + len(line))
     return offsets
 
-
 def fix_strings(filename):  # type: (str) -> int
     with io.open(filename, encoding='UTF-8', newline='') as f:
-        contents = f.read()
+        try:
+            contents = f.read()
+        except UnicodeDecodeError as e:
+            print(f'Failed opening {filename}')
+            raise
     line_offsets = get_line_offsets_by_line_no(contents)
 
     # Basically a mutable string
